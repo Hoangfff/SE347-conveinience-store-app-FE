@@ -1,6 +1,6 @@
 import './App.css'
 // 1. Import Button từ đường dẫn file của bạn
-import { Button } from "./components/ui/Button";
+import { Button } from "../components/ui/button";
 
 function App() {
   return (
