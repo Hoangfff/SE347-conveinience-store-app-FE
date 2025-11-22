@@ -1,68 +1,43 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    /* Light theme */
+    --sidebar-background: 215 25% 15%;/*Màu nền sidebar, rất tối, gần màu xanh đen*/
+    --sidebar-foreground: 210 20% 85%;/*Màu chữ trên sidebar*/
+    --sidebar-primary: 185 85% 42%;/*Màu cho active status*/
+    --sidebar-primary-foreground: 0 0% 100%;/*màu chữ trên nền active*/
+    --sidebar-accent: 215 25% 20%;/*màu khi hover*/
+    --sidebar-accent-foreground: 210 20% 90%;/*màu chữ khi hover*/
+    --sidebar-border: 215 25% 22%;/*màu border sidebar*/
+    --sidebar-ring: 185 85% 42%;
+
+    --card-background: 0 0% 100%; /* Màu nền của thẻ (card) */
+    --card-title: 215 28% 17%; /* Màu chữ*/
+    --card-border: 220 13% 91%; /* Màu border của thẻ (card) */
+    --card-content: 215 16% 47%; /* Màu chữ nội dung */
+
+    --primary: 185 85% 42%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 20% 95%;
+    --secondary-foreground: 215 25% 15%;
+
+    --accent: 185 75% 92%;
+    --accent-foreground: 185 85% 35%;
+
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --background: 210 17% 98%;
+    --foreground: 215 25% 15%;
+
+    --border: 214 20% 90%;
+    --input: 214 20% 90%;
+    --ring: 185 85% 42%;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+
+  /* DARK THEME */
 }
