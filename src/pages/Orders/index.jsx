@@ -1,9 +1,10 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {Header} from "../../components/ui/header";
 import { Card, CardContent } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import {SearchBar} from "../../components/ui/searchbar";
+import Modal from "../../components/ui/modal";
 
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 const orders = [
@@ -119,6 +120,27 @@ const getStatusBadge = (status) => {
 };
 
 export default function Orders() { 
+    // 2. Tạo State để quản lý Modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // State lưu dữ liệu form (để gửi lên server sau này)
+    const [formData, setFormData] = useState({
+      id: "",
+      customer: "",
+      store: "",
+      items: Number,
+      total: "",
+      status: "",
+      date: "",
+    });
+    const handleSave = (e) => {
+        e.preventDefault();
+        console.log("Lưu sản phẩm:", formData);
+        // Gọi API save tại đây...
+        
+        setIsModalOpen(false); // Đóng modal sau khi lưu
+        alert("Đã thêm sản phẩm thành công!");
+    };
     return(
         <div className="space-y-8">
             <header className="flex justify-between h-16 ">
@@ -126,7 +148,9 @@ export default function Orders() {
                     <Header>Orders</Header>
                     <span className="text-sm text-slate-600 italic">Danh sách các đơn hàng</span>
                 </div>
-                <Button>+ Thêm đơn hàng mới</Button>
+                <Button onClick={() => setIsModalOpen(true)}>
+                  + Thêm đơn hàng mới
+                </Button>
             </header>
             <SearchBar placeholder="Tìm kiếm đơn hàng"></SearchBar>
             <Card>
@@ -159,10 +183,15 @@ export default function Orders() {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">{getStatusBadge(order.status)}</td>
                                         <td>
                                             <div>
-                                                <Button variant="ghost">
+                                                <Button 
+                                                  variant="ghost"
+                                                >
                                                     <FaEdit size={10}/>    
                                                 </Button> 
-                                                <Button variant="ghost">
+                                                <Button 
+                                                  variant="ghost"
+                                                  onDelete={() => onDeleteOrder(order.id, order.customer)}
+                                                >
                                                     <FaTrashAlt size={10}/>    
                                                 </Button>
                                             </div>
@@ -174,6 +203,134 @@ export default function Orders() {
                     </div>
                 </CardContent>
             </Card>
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                title="Thêm sản phẩm mới"
+            >
+                <form onSubmit={handleSave} className="space-y-4">
+                    <div className="flex flex-col space-y-2">
+                        <label className="text-sm font-medium">Mã đơn hàng</label>
+                        <input 
+                            placeholder="Ví dụ: ORD-001" 
+                            onChange={(e) => setFormData({...formData, name: e.target.value})}
+                            className="flex h-10 w-full rounded-md border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                        />
+                    </div>
+                    <div className="flex flex-col space-y-2">
+                        <label className="text-sm font-medium">Tên khách hàng</label>
+                        <input 
+                            placeholder="Ví dụ: Nguyễn Văn A" 
+                            onChange={(e) => setFormData({...formData, name: e.target.value})}
+                            className="flex h-10 w-full rounded-md border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Cửa hàng</label>
+                        <select className="flex h-10 w-full rounded-md border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+                            <option>Cửa hàng Q1</option>
+                            <option>Cửa hàng Q2</option>
+                            <option>Cửa hàng Q3</option>
+                        </select>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Giá bán</label>
+                            <input
+                                type="number" 
+                                placeholder="0" 
+                                onChange={(e) => setFormData({...formData, price: e.target.value})}
+                                className="flex h-10 w-full rounded-md border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Số lượng </label>
+                            <input
+                                type="number"
+                                placeholder="0"
+                                onChange={(e) => setFormData({...formData,stock: e.target.value})}
+                                className="flex h-10 w-full rounded-md border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Trạng thái</label>
+                        <div className="flex items-center gap-6 mt-2">
+                            {/* Lựa chọn 1: Hoàn thành */}
+                          <div className="flex items-center space-x-2 cursor-pointer">
+                              <input
+                                  type="radio"
+                                  id="status-completed"
+                                  name="status"
+                                  value="completed"
+                                  checked={formData.status === "completed"}
+                                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                  className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                              />
+                              <label htmlFor="status-completed" className="text-sm font-medium text-gray-700 cursor-pointer">
+                                  Hoàn thành
+                              </label>
+                          </div>
+                          {/* Lựa chọn 2: Đang chờ xử lý*/}
+                          <div className="flex items-center space-x-2 cursor-pointer">
+                              <input
+                                  type="radio"
+                                  id="status-pending"
+                                  name="status"
+                                  value="pending"
+                                  checked={formData.status === "pending"}
+                                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                  className="h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500 cursor-pointer"
+                              />
+                              <label htmlFor="status-pending" className="text-sm font-medium text-gray-700 cursor-pointer">
+                                  Đang chờ xử lý
+                              </label>
+                          </div>
+                          {/* Lựa chọn 3: Đang xử lý */}
+                          <div className="flex items-center space-x-2 cursor-pointer">
+                              <input
+                                  type="radio"
+                                  id="status-processing"
+                                  name="status"
+                                  value="processing"
+                                  checked={formData.status === "processing"}
+                                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                  className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                              />
+                              <label htmlFor="status-processing" className="text-sm font-medium text-gray-700 cursor-pointer">
+                                  Đang xử lý
+                              </label>
+                          </div>
+                          {/* Lựa chọn 4: Đã hủy*/}
+                          <div className="flex items-center space-x-2 cursor-pointer">
+                              <input
+                                  type="radio"
+                                  id="status-cancelled"
+                                  name="status"
+                                  value="cancelled"
+                                  checked={formData.status === "cancelled"}
+                                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                  className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                              />
+                              <label htmlFor="status-cancelled" className="text-sm font-medium text-gray-700 cursor-pointer">
+                                  Đã hủy
+                              </label>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div className="pt-4 flex justify-end gap-2">
+                        <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
+                            Hủy bỏ
+                        </Button>
+                        <Button type="submit">
+                            Lưu sản phẩm
+                        </Button>
+                    </div>
+                </form>
+            </Modal>  
         </div> 
     );        
 }
