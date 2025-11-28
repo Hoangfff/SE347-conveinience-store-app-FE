@@ -13,7 +13,7 @@ interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
 // 2. Khai báo Generic cho forwardRef: <Kiểu_Ref, Kiểu_Props>
 const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
   ({ isOpen, onClose, title, children, className, ...props }, ref) => {
-    
+
     // Logic khóa cuộn trang khi Modal mở
     useEffect(() => {
       if (isOpen) {
@@ -27,7 +27,7 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     if (!isOpen) return null;
 
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity p-4 animate-in fade-in duration-200">
+      <div className="fixed top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity p-4 animate-in fade-in duration-200" style={{ margin: 0 }}>
         <div
           ref={ref}
           className={cn(

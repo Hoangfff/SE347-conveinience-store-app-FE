@@ -90,7 +90,7 @@ export default function Dashboard() {
           <CardContent className="p-4">
             <div className="text-sm text-slate-500">Sản phẩm bán trong tháng</div>
             <div className="mt-2 text-2xl font-semibold">{stats.productsSoldThisMonth}</div>
-            <div className="text-xs text-slate-400 mt-2">Tổng sản phẩm bán được trong tháng</div>
+            <div className="text-xs text-slate-400 mt-2">Tổng số sản phẩm bán được</div>
           </CardContent>
         </Card>
 
@@ -98,7 +98,7 @@ export default function Dashboard() {
           <CardContent className="p-4">
             <div className="text-sm text-slate-500">Số đơn hàng (tháng)</div>
             <div className="mt-2 text-2xl font-semibold">{stats.ordersThisMonth}</div>
-            <div className="text-xs text-slate-400 mt-2">Đơn hàng từ khách hàng</div>
+            <div className="text-xs text-slate-400 mt-2">Từ khách hàng</div>
           </CardContent>
         </Card>
       </main>
@@ -108,7 +108,7 @@ export default function Dashboard() {
           <CardContent className="p-4">
             <h3 className="text-lg font-semibold mb-2">Sản phẩm bán nhiều nhất tháng</h3>
             <div className="text-xl font-bold">{stats.topProduct}</div>
-            <div className="text-sm text-slate-400 mt-2">Dựa trên số lượng bán trong tháng</div>
+            <div className="text-sm text-slate-400 mt-2">Dựa trên số lượng được bán</div>
           </CardContent>
         </Card>
 
@@ -116,7 +116,7 @@ export default function Dashboard() {
           <CardContent className="p-4">
             <h3 className="text-lg font-semibold mb-2">Cửa hàng bán nhiều nhất</h3>
             <div className="text-xl font-bold">{stats.topStore}</div>
-            <div className="text-sm text-slate-400 mt-2">Danh sách được tính theo tổng sản phẩm bán</div>
+            <div className="text-sm text-slate-400 mt-2">Được tính theo tổng sản phẩm bán</div>
           </CardContent>
         </Card>
       </section>
