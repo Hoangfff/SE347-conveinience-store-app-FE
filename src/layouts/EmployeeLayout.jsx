@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { FaThLarge, FaBox, FaUserTie, FaShoppingCart, FaSignOutAlt } from 'react-icons/fa';
+import { FaThLarge, FaBox, FaUserTie, FaShoppingCart, FaSignOutAlt, FaExclamationCircle } from 'react-icons/fa';
 import { cn } from '../lib/utils';
 import Dashboard from '../pages/DashBoard';
 import Products from '../pages/Products';
 import Employee from '../pages/Employees';
 import Orders from '../pages/Orders';
+import Complaints from '../pages/Complaints';
 
 const EmployeeLayout = () => {
     const [currentView, setCurrentView] = useState("dashboard");
@@ -28,6 +29,7 @@ const EmployeeLayout = () => {
         { id: "products", name: "Sản Phẩm", icon: <FaBox />, component: Products },
         { id: "employees", name: "Nhân Viên", icon: <FaUserTie />, component: Employee },
         { id: "orders", name: "Đơn Hàng", icon: <FaShoppingCart />, component: Orders },
+        { id: "complaints", name: "Khiếu Nại", icon: <FaExclamationCircle />, component: Complaints },
     ];
 
     // Get the current component to render
