@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { FaThLarge, FaStore, FaBox, FaUserTie, FaShoppingCart, FaSignOutAlt } from 'react-icons/fa';
+import { FaThLarge, FaStore, FaBox, FaUserTie, FaShoppingCart, FaSignOutAlt, FaExclamationCircle } from 'react-icons/fa';
 import { cn } from '../lib/utils';
 import Dashboard from '../pages/DashBoard';
 import Products from '../pages/Products';
 import Employee from '../pages/Employees';
 import Shops from '../pages/Shops';
 import Orders from '../pages/Orders';
+import ComplaintsAdmin from '../pages/ComplaintsAdmin';
 import TestCard from '../pages/Test';
 
 const AdminLayout = () => {
@@ -29,6 +30,7 @@ const AdminLayout = () => {
     { id: "products", name: "Sản Phẩm", icon: <FaBox />, component: Products },
     { id: "employees", name: "Nhân Viên", icon: <FaUserTie />, component: Employee },
     { id: "orders", name: "Đơn Hàng", icon: <FaShoppingCart />, component: Orders },
+    { id: "complaints", name: "Khiếu Nại", icon: <FaExclamationCircle />, component: ComplaintsAdmin },
   ];
 
   // Get the current component to render

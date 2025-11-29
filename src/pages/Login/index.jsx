@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
@@ -9,6 +9,16 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+
+  // Load saved email on component mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    if (savedEmail) {
+      setUsername(savedEmail);
+      setRememberMe(true);
+    }
+  }, []);
 
   // Email validation regex
   const isValidEmail = (email) => {
@@ -39,6 +49,13 @@ const Login = () => {
 
     // Extract name from email (part before @)
     const name = username.split('@')[0].toLowerCase();
+
+    // Save or remove email based on remember me checkbox
+    if (rememberMe) {
+      localStorage.setItem("rememberedEmail", username);
+    } else {
+      localStorage.removeItem("rememberedEmail");
+    }
 
     // Role-based routing
     if (name === "admin") {
@@ -104,6 +121,20 @@ const Login = () => {
                 placeholder="Mật khẩu"
                 autoComplete="current-password"
               />
+            </div>
+
+            {/* Remember Me Checkbox */}
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="remember-me"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"
+              />
+              <label htmlFor="remember-me" className="text-sm text-gray-700 cursor-pointer">
+                Ghi nhớ tôi
+              </label>
             </div>
 
             <div className="flex items-center justify-between pt-2">
