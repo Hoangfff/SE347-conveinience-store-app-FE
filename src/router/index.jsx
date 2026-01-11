@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import AdminLayout from "../layouts/AdminLayout";
 import EmployeeLayout from "../layouts/EmployeeLayout";
+import CashierLayout from "../layouts/CashierLayout";
 import Login from "../pages/Login";
 
 const router = createBrowserRouter([
@@ -10,11 +11,15 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <AdminLayout />, // Admin panel with state-based navigation
+    element: <AdminLayout />, // Admin panel - general operations
   },
   {
     path: "/employee",
-    element: <EmployeeLayout />, // Employee panel without Shops
+    element: <EmployeeLayout />, // Store Manager panel
+  },
+  {
+    path: "/cashier",
+    element: <CashierLayout />, // Cashier panel - day-to-day POS
   },
 ]);
 

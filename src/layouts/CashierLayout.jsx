@@ -1,22 +1,27 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { FaThLarge, FaBox, FaUserTie, FaShoppingCart, FaSignOutAlt, FaExclamationCircle, FaTruck, FaWarehouse, FaTags, FaUndo } from 'react-icons/fa';
+import { FaThLarge, FaBox, FaSignOutAlt, FaExclamationCircle, FaCashRegister } from 'react-icons/fa';
 import { cn } from '../lib/utils';
 import Dashboard from '../pages/DashBoard';
 import Products from '../pages/Products';
-import Employee from '../pages/Employees';
-import Orders from '../pages/Orders';
 import Complaints from '../pages/Complaints';
-import PurchaseOrders from '../pages/PurchaseOrders';
-import InventoryAdjustment from '../pages/InventoryAdjustment';
-import Promotions from '../pages/Promotions';
-import Return from '../pages/POS/Return';
+import POS from '../pages/POS';
+import { ShiftProvider, ShiftStatusBar, useShift } from '../components/shift/ShiftManager';
 
-const EmployeeLayout = () => {
-    const [currentView, setCurrentView] = useState("dashboard");
+// Inner layout that uses shift context
+const CashierLayoutInner = () => {
+    const [currentView, setCurrentView] = useState("pos"); // Cashiers start at POS
     const navigate = useNavigate();
+    const { isShiftOpen, requestCloseModal } = useShift();
 
     const handleLogout = () => {
+        // Must close shift before logout
+        if (isShiftOpen) {
+            alert('Vui lòng đóng ca làm việc trước khi đăng xuất!');
+            requestCloseModal();
+            return;
+        }
+
         const confirmed = window.confirm('Bạn có chắc chắn muốn đăng xuất?');
         if (confirmed) {
             localStorage.removeItem('isAuthenticated');
@@ -26,22 +31,16 @@ const EmployeeLayout = () => {
         }
     };
 
-    // Store Manager menu: Day-to-day operations
-    // Excluded: Cửa hàng, Bán hàng (POS), Người dùng, Chuyển kho
+    // Cashier menu: Day-to-day checkout activities only
     const menuItems = [
         { id: "dashboard", name: "Dashboard", icon: <FaThLarge />, component: Dashboard },
+        { id: "pos", name: "Bán Hàng (POS)", icon: <FaCashRegister />, component: POS },
         { id: "products", name: "Sản Phẩm", icon: <FaBox />, component: Products },
-        { id: "inventory", name: "Điều Chỉnh Kho", icon: <FaWarehouse />, component: InventoryAdjustment },
-        { id: "purchase", name: "Nhập Hàng", icon: <FaTruck />, component: PurchaseOrders },
-        { id: "promotions", name: "Khuyến Mãi", icon: <FaTags />, component: Promotions },
-        { id: "return", name: "Trả Hàng", icon: <FaUndo />, component: Return },
-        { id: "orders", name: "Đơn Hàng", icon: <FaShoppingCart />, component: Orders },
-        { id: "employees", name: "Nhân Viên", icon: <FaUserTie />, component: Employee },
         { id: "complaints", name: "Khiếu Nại", icon: <FaExclamationCircle />, component: Complaints },
     ];
 
     // Get the current component to render
-    const CurrentComponent = menuItems.find(item => item.id === currentView)?.component || Dashboard;
+    const CurrentComponent = menuItems.find(item => item.id === currentView)?.component || POS;
 
     return (
         <div className="flex h-screen bg-gray-50">
@@ -50,7 +49,7 @@ const EmployeeLayout = () => {
 
                 {/* Logo Area */}
                 <div className="flex h-16 items-center px-6 border-b border-sidebar-border">
-                    <h1 className="text-xl font-bold text-sidebar-accent-foreground">Store Manager</h1>
+                    <h1 className="text-xl font-bold text-sidebar-accent-foreground">Store POS</h1>
                 </div>
 
                 {/* Menu Items */}
@@ -78,12 +77,12 @@ const EmployeeLayout = () => {
                 {/* User Footer */}
                 <div className="p-4 border-t border-sidebar-border bg-sidebar-accent">
                     <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
-                            M
+                        <div className="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white font-bold">
+                            C
                         </div>
                         <div>
-                            <p className="text-sm font-semibold text-sidebar-foreground">Store Manager</p>
-                            <p className="text-xs text-slate-400">manager@store.com</p>
+                            <p className="text-sm font-semibold text-sidebar-foreground">Cashier</p>
+                            <p className="text-xs text-slate-400">{localStorage.getItem('userEmail') || 'cashier@store.com'}</p>
                         </div>
                     </div>
 
@@ -100,7 +99,15 @@ const EmployeeLayout = () => {
 
             {/* --- MAIN CONTENT --- */}
             <main className="flex-1 overflow-x-auto overflow-y-auto">
-                <header className='h-16 flex items-center px-6 border-b border-gray-300'></header>
+                {/* Header with Shift Status */}
+                <header className='h-16 flex items-center justify-between px-6 border-b border-gray-300 bg-white'>
+                    <div className="flex items-center gap-4">
+                        <h2 className="font-semibold text-gray-700">
+                            {menuItems.find(item => item.id === currentView)?.name || 'Dashboard'}
+                        </h2>
+                    </div>
+                    <ShiftStatusBar />
+                </header>
                 <div className='p-8'>
                     <CurrentComponent />
                 </div>
@@ -109,4 +116,13 @@ const EmployeeLayout = () => {
     );
 };
 
-export default EmployeeLayout;
+// Wrapper with ShiftProvider
+const CashierLayout = () => {
+    return (
+        <ShiftProvider>
+            <CashierLayoutInner />
+        </ShiftProvider>
+    );
+};
+
+export default CashierLayout;

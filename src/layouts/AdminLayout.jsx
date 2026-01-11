@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { FaThLarge, FaStore, FaBox, FaUserTie, FaShoppingCart, FaSignOutAlt, FaExclamationCircle } from 'react-icons/fa';
+import { FaThLarge, FaStore, FaBox, FaUserTie, FaShoppingCart, FaSignOutAlt, FaExclamationCircle, FaUsers, FaTruck, FaWarehouse, FaExchangeAlt, FaTags } from 'react-icons/fa';
 import { cn } from '../lib/utils';
 import Dashboard from '../pages/DashBoard';
 import Products from '../pages/Products';
@@ -8,7 +8,11 @@ import Employee from '../pages/Employees';
 import Shops from '../pages/Shops';
 import Orders from '../pages/Orders';
 import ComplaintsAdmin from '../pages/ComplaintsAdmin';
-import TestCard from '../pages/Test';
+import Users from '../pages/Users';
+import PurchaseOrders from '../pages/PurchaseOrders';
+import InventoryAdjustment from '../pages/InventoryAdjustment';
+import Transfer from '../pages/Transfer';
+import Promotions from '../pages/Promotions';
 
 const AdminLayout = () => {
   const [currentView, setCurrentView] = useState("dashboard");
@@ -17,19 +21,25 @@ const AdminLayout = () => {
   const handleLogout = () => {
     const confirmed = window.confirm('Bạn có chắc chắn muốn đăng xuất?');
     if (confirmed) {
-      // Clear authentication data
       localStorage.removeItem('isAuthenticated');
-      // Redirect to login page
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userEmail');
       navigate('/');
     }
   };
 
+  // Admin menu: General operations, NOT day-to-day (no POS, no Return)
   const menuItems = [
     { id: "dashboard", name: "Dashboard", icon: <FaThLarge />, component: Dashboard },
     { id: "shops", name: "Cửa Hàng", icon: <FaStore />, component: Shops },
     { id: "products", name: "Sản Phẩm", icon: <FaBox />, component: Products },
-    { id: "employees", name: "Nhân Viên", icon: <FaUserTie />, component: Employee },
+    { id: "inventory", name: "Điều Chỉnh Kho", icon: <FaWarehouse />, component: InventoryAdjustment },
+    { id: "purchase", name: "Nhập Hàng", icon: <FaTruck />, component: PurchaseOrders },
+    { id: "transfer", name: "Chuyển Kho", icon: <FaExchangeAlt />, component: Transfer },
+    { id: "promotions", name: "Khuyến Mãi", icon: <FaTags />, component: Promotions },
     { id: "orders", name: "Đơn Hàng", icon: <FaShoppingCart />, component: Orders },
+    { id: "users", name: "Người Dùng", icon: <FaUsers />, component: Users },
+    { id: "employees", name: "Nhân Viên", icon: <FaUserTie />, component: Employee },
     { id: "complaints", name: "Khiếu Nại", icon: <FaExclamationCircle />, component: ComplaintsAdmin },
   ];
 
