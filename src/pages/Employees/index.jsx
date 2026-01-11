@@ -101,6 +101,7 @@ const getStatusBadge = (status) => {
 
 export default function Employee() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     // State lưu dữ liệu form (để gửi lên server sau này)
     const [formData, setFormData] = useState({
@@ -114,13 +115,57 @@ export default function Employee() {
         avatar: "",
     });
 
+    // State lưu dữ liệu khi edit
+    const [editFormData, setEditFormData] = useState({
+        id: "",
+        name: "",
+        email: "",
+        phone: "",
+        position: "",
+        store: "",
+        status: "",
+        avatar: "",
+    });
+
     const handleSave = (e) => {
         e.preventDefault();
-        console.log("Lưu sản phẩm:", formData);
+        console.log("Lưu nhân viên:", formData);
         // Gọi API save tại đây...
 
         setIsModalOpen(false); // Đóng modal sau khi lưu
-        alert("Đã thêm sản phẩm thành công!");
+        alert("Đã thêm nhân viên thành công!");
+    };
+
+    const handleEdit = (employee) => {
+        // Set dữ liệu nhân viên cần edit vào form
+        setEditFormData({
+            id: employee.id,
+            name: employee.name,
+            email: employee.email,
+            phone: employee.phone,
+            position: employee.position,
+            store: employee.store,
+            status: employee.status,
+            avatar: employee.avatar,
+        });
+        setIsEditModalOpen(true);
+    };
+
+    const handleUpdate = (e) => {
+        e.preventDefault();
+        console.log("Cập nhật nhân viên:", editFormData);
+        // Gọi API update tại đây...
+
+        setIsEditModalOpen(false);
+        alert("Đã cập nhật nhân viên thành công!");
+    };
+
+    const handleDelete = (employee) => {
+        if (window.confirm(`Bạn có chắc chắn muốn xóa nhân viên "${employee.name}"?`)) {
+            console.log("Xóa nhân viên:", employee.id);
+            // Gọi API delete tại đây...
+            alert("Đã xóa nhân viên thành công!");
+        }
     };
     return (
         <div className="space-y-8">
@@ -161,11 +206,11 @@ export default function Employee() {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">{employee.store}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">{getStatusBadge(employee.status)}</td>
                                         <td>
-                                            <div>
-                                                <Button variant="ghost">
+                                            <div className="flex gap-1">
+                                                <Button variant="ghost" onClick={() => handleEdit(employee)}>
                                                     <FaEdit size={10} />
                                                 </Button>
-                                                <Button variant="ghost">
+                                                <Button variant="ghost" onClick={() => handleDelete(employee)}>
                                                     <FaTrashAlt size={10} />
                                                 </Button>
                                             </div>
@@ -284,6 +329,141 @@ export default function Employee() {
                         </Button>
                         <Button type="submit">
                             Lưu
+                        </Button>
+                    </div>
+                </form>
+            </Modal>
+
+            {/* Modal Chỉnh sửa nhân viên */}
+            <Modal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                title="Chỉnh sửa thông tin nhân viên"
+            >
+                <form onSubmit={handleUpdate} className="space-y-4">
+                    <div className="flex flex-col space-y-2">
+                        <label className="text-sm font-medium">ID nhân viên</label>
+                        <input
+                            value={editFormData.id}
+                            disabled
+                            className="flex h-10 w-full rounded-md border border-border px-3 py-2 text-sm bg-gray-100 cursor-not-allowed"
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Tên Nhân Viên</label>
+                        <input
+                            type="text"
+                            value={editFormData.name}
+                            placeholder="Ví dụ: Nguyễn Hoàng Tuấn"
+                            onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                            className="flex h-10 w-full rounded-md border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Email</label>
+                        <input
+                            value={editFormData.email}
+                            placeholder="Ví dụ: 23521719@gm.uit.edu.vn"
+                            onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                            className="flex h-10 w-full rounded-md border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Số Điện Thoại</label>
+                        <input
+                            value={editFormData.phone}
+                            placeholder="Ví dụ: 0862318328"
+                            onChange={(e) => setEditFormData({ ...editFormData, phone: e.target.value })}
+                            className="flex h-10 w-full rounded-md border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Vị trí</label>
+                        <select
+                            value={editFormData.position}
+                            onChange={(e) => setEditFormData({ ...editFormData, position: e.target.value })}
+                            className="flex h-10 w-full rounded-md border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                        >
+                            <option value="">Chọn vị trí</option>
+                            <option value="Quản lý cửa hàng">Quản lý cửa hàng</option>
+                            <option value="Nhân viên bán hàng">Nhân viên bán hàng</option>
+                            <option value="Thủ kho">Thủ kho</option>
+                            <option value="Kế toán">Kế toán</option>
+                        </select>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Cửa hàng</label>
+                        <select
+                            value={editFormData.store}
+                            onChange={(e) => setEditFormData({ ...editFormData, store: e.target.value })}
+                            className="flex h-10 w-full rounded-md border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                        >
+                            <option value="">Chọn cửa hàng</option>
+                            <option value="Cửa hàng Q1">Cửa hàng Q1</option>
+                            <option value="Cửa hàng Q2">Cửa hàng Q2</option>
+                            <option value="Cửa hàng Q3">Cửa hàng Q3</option>
+                        </select>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Trạng thái</label>
+
+                        <div className="flex items-center gap-6 mt-2">
+                            {/* Lựa chọn 1: Đang làm */}
+                            <div className="flex items-center space-x-2 cursor-pointer">
+                                <input
+                                    type="radio"
+                                    id="edit-status-active"
+                                    name="edit-status"
+                                    value="active"
+                                    checked={editFormData.status === "active"}
+                                    onChange={(e) => setEditFormData({ ...editFormData, status: e.target.value })}
+                                    className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                                />
+                                <label htmlFor="edit-status-active" className="text-sm font-medium text-gray-700 cursor-pointer">
+                                    Đang làm
+                                </label>
+                            </div>
+
+                            {/* Lựa chọn 2: Nghỉ làm */}
+                            <div className="flex items-center space-x-2 cursor-pointer">
+                                <input
+                                    type="radio"
+                                    id="edit-status-inactive"
+                                    name="edit-status"
+                                    value="inactive"
+                                    checked={editFormData.status === "inactive"}
+                                    onChange={(e) => setEditFormData({ ...editFormData, status: e.target.value })}
+                                    className="h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500 cursor-pointer"
+                                />
+                                <label htmlFor="edit-status-inactive" className="text-sm font-medium text-gray-700 cursor-pointer">
+                                    Nghỉ việc
+                                </label>
+                            </div>
+                            {/* Lựa chọn 3: Nghỉ phép */}
+                            <div className="flex items-center space-x-2 cursor-pointer">
+                                <input
+                                    type="radio"
+                                    id="edit-status-on-leave"
+                                    name="edit-status"
+                                    value="on_leave"
+                                    checked={editFormData.status === "on_leave"}
+                                    onChange={(e) => setEditFormData({ ...editFormData, status: e.target.value })}
+                                    className="h-4 w-4 border-gray-300 text-yellow-600 focus:ring-yellow-500 cursor-pointer"
+                                />
+                                <label htmlFor="edit-status-on-leave" className="text-sm font-medium text-gray-700 cursor-pointer">
+                                    Nghỉ phép
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="pt-4 flex justify-end gap-2">
+                        <Button type="button" variant="outline" onClick={() => setIsEditModalOpen(false)}>
+                            Hủy bỏ
+                        </Button>
+                        <Button type="submit">
+                            Cập nhật
                         </Button>
                     </div>
                 </form>
