@@ -49,7 +49,7 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
           </div>
 
           {/* Body */}
-          <div className="p-6">{children}</div>
+          <div className="p-6 hide-scrollbar">{children}</div>
         </div>
       </div>
     );

@@ -318,7 +318,7 @@ export default function Products() {
 
     // Render form
     const renderForm = (onSubmit, buttonText) => (
-        <form onSubmit={onSubmit} className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+        <form onSubmit={onSubmit} className="space-y-4 max-h-[70vh] overflow-y-auto pr-2 hide-scrollbar">
             {/* Basic Info */}
             <div className="grid grid-cols-2 gap-4">
                 <div>

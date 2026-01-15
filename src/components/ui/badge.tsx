@@ -6,7 +6,7 @@ const Badge =
     (({className, ...props}, ref) => (
         <div
             ref = {ref}
-            className={cn("font-bold text-3xl text-white-600 border rounded-lg",className)}{...props}
+            className={cn("font-bold text-sm text-white-600 border rounded-lg px-2",className)}{...props}
         />
     ));
 Badge.displayName = "Badge";
